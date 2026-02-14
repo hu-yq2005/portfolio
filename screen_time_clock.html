@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Screen Time Clock Visualization (D3)</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
+    h1 { margin: 0 0 6px; font-size: 20px; }
+    p { margin: 0 0 18px; color: #444; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    .card { border: 1px solid #e5e5e5; border-radius: 14px; padding: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+    .title { font-weight: 650; margin-bottom: 8px; }
+    .subtitle { font-size: 12px; color: #666; margin-top: 6px; }
+    .tooltip {
+      position: fixed; pointer-events: none; opacity: 0;
+      background: rgba(20,20,20,.92); color: #fff; padding: 8px 10px;
+      border-radius: 10px; font-size: 12px; line-height: 1.25;
+      transform: translate(-50%, -120%);
+      white-space: nowrap;
+    }
+    .note { margin-top: 16px; font-size: 12px; color: #666; }
+  </style>
+</head>
+<body>
+  <h1>Screen Time as a “Day Clock”</h1>
+  <p>Each circle is a 24-hour day. The filled arc shows how much of the day was spent on-screen.</p>
+
+  <div class="grid" id="viz"></div>
+  <div class="tooltip" id="tooltip"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script>
+    // ---- Your data (edit here if needed) ----
+    // screenMin = total screen time in minutes
+    const data = [
+      { date: "Feb 9",  screenMin: 8*60 + 44 }, // 8h44m
+      { date: "Feb 10", screenMin: 4*60 + 57 }, // 4h57m
+      { date: "Feb 11", screenMin: 5*60 + 50 }, // 5h50m
+    ];
+
+    const minutesPerDay = 24 * 60;
+
+    // Optional: choose where the arc starts (like a clock).
+    // -Math.PI/2 starts at 12 o'clock.
+    const startAngle = -Math.PI / 2;
+
+    // Layout settings
+    const size = 240;                 // SVG width/height
+    const margin = 14;
+    const radius = (size / 2) - margin;
+    const ringThickness = 22;
+
+    // Tooltip
+    const tooltip = d3.select("#tooltip");
+    const formatHM = (min) => {
+      const h = Math.floor(min / 60);
+      const m = min % 60;
+      return `${h}h ${String(m).padStart(2, "0")}m`;
+    };
+    const formatPct = (min) => `${(min / minutesPerDay * 100).toFixed(1)}%`;
+
+    // Container
+    const container = d3.select("#viz");
+
+    // Create one card per day
+    const cards = container.selectAll(".card")
+      .data(data)
+      .join("div")
+      .attr("class", "card");
+
+    cards.append("div")
+      .attr("class", "title")
+      .text(d => d.date);
+
+    // SVG per card
+    const svgs = cards.append("svg")
+      .attr("viewBox", `0 0 ${size} ${size}`)
+      .attr("width", "100%")
+      .attr("height", "auto");
+
+    const g = svgs.append("g")
+      .attr("transform", `translate(${size/2},${size/2})`);
+
+    // Arc generator for the filled screen-time segment
+    const arc = d3.arc()
+      .innerRadius(radius - ringThickness)
+      .outerRadius(radius)
+      .cornerRadius(10);
+
+    // Background ring (24h)
+    g.append("path")
+      .attr("d", d3.arc()
+        .innerRadius(radius - ringThickness)
+        .outerRadius(radius)
+        .startAngle(startAngle)
+        .endAngle(startAngle + 2*Math.PI)
+        .cornerRadius(10)
+      )
+      .attr("fill", "#f0f0f0");
+
+    // Tick marks (optional but nice)
+    // Major ticks every 6 hours; minor every hour
+    const ticks = d3.range(0, 24, 1);
+    g.append("g")
+      .selectAll("line")
+      .data(ticks)
+      .join("line")
+      .attr("x1", d => (radius - ringThickness - (d % 6 === 0 ? 10 : 6)) * Math.cos(startAngle + d/24*2*Math.PI))
+      .attr("y1", d => (radius - ringThickness - (d % 6 === 0 ? 10 : 6)) * Math.sin(startAngle + d/24*2*Math.PI))
+      .attr("x2", d => (radius + 2) * Math.cos(startAngle + d/24*2*Math.PI))
+      .attr("y2", d => (radius + 2) * Math.sin(startAngle + d/24*2*Math.PI))
+      .attr("stroke", d => d % 6 === 0 ? "#bbb" : "#ddd")
+      .attr("stroke-width", d => d % 6 === 0 ? 2 : 1);
+
+    // Filled arc per day (screen time)
+    g.append("path")
+      .attr("class", "fill-arc")
+      .attr("fill", "#111") // keep it simple; you can change if you want
+      .attr("d", d => {
+        const frac = Math.max(0, Math.min(1, d.screenMin / minutesPerDay));
+        return arc({
+          startAngle,
+          endAngle: startAngle + frac * 2*Math.PI
+        });
+      })
+      .style("cursor", "default")
+      .on("mousemove", (event, d) => {
+        tooltip
+          .style("opacity", 1)
+          .style("left", `${event.clientX}px`)
+          .style("top", `${event.clientY}px`)
+          .html(`<strong>${d.date}</strong><br/>Screen time: ${formatHM(d.screenMin)}<br/>Share of day: ${formatPct(d.screenMin)}`);
+      })
+      .on("mouseleave", () => tooltip.style("opacity", 0));
+
+    // Center labels
+    g.append("text")
+      .attr("text-anchor", "middle")
+      .attr("y", -4)
+      .attr("font-size", "22")
+      .attr("font-weight", 700)
+      .text(d => formatHM(d.screenMin));
+
+    g.append("text")
+      .attr("text-anchor", "middle")
+      .attr("y", 18)
+      .attr("font-size", "12")
+      .attr("fill", "#666")
+      .text(d => `${formatPct(d.screenMin)} of 24h`);
+
+    // Card subtitle (optional)
+    cards.append("div")
+      .attr("class", "subtitle")
+      .text(d => `Total minutes: ${d.screenMin} / ${minutesPerDay}`);
+
+    // Small note for your write-up
+    d3.select("body").append("div")
+      .attr("class", "note")
+      .text("Tip: For your assignment write-up, explain the mapping: 24h = full circle; screen time minutes = arc length; arc starts at 12 o’clock.");
+  </script>
+</body>
+</html>
