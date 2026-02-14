@@ -29,16 +29,16 @@ export default function Home() {
   return (
     <div className="stack">
       <section className="card">
-        <h1>Hi, I’m Your Name</h1>
+        <h1>Hi, I’m Yanqiu Hu</h1>
         <p className="muted">
           This is a lightweight portfolio site. Drop Markdown files into <code>public/work</code> and they’ll
           show up here after you run the dev server or build.
         </p>
         <div className="buttonRow">
-          <a className="button" href="https://github.com/" target="_blank" rel="noreferrer">
+          <a className="button" href="https://github.com/hu-yq2005/" target="_blank" rel="noreferrer">
             GitHub
           </a>
-          <a className="button" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">
+          <a className="button" href="https://www.linkedin.com/in/huyanqiu//" target="_blank" rel="noreferrer">
             LinkedIn
           </a>
           <a className="button button--ghost" href="/work/index.json" target="_blank" rel="noreferrer">
