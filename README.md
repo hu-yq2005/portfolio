@@ -31,12 +31,18 @@ description: One-line summary.
 
 ## Deploy (GitHub Pages)
 
-1. Build with a base path:
+### Option A (recommended): GitHub Actions deploy
+
+Set GitHub Pages to deploy from **GitHub Actions** and push to `main`.
+
+### Option B: Manual build
+
+Build with a base path (use your repo name only):
 
 ```bash
-VITE_BASE=/YOUR_REPO_NAME/ npm run build
+VITE_BASE=/portfolio/ npm run build
 ```
 
-2. Deploy the `dist/` folder to GitHub Pages.
+Then deploy the `dist/` folder to GitHub Pages.
 
 Tip: if you want, tell me your GitHub username + repo name and I can add a GitHub Actions workflow to auto-deploy.
