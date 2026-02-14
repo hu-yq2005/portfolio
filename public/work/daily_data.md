@@ -86,7 +86,7 @@ This design reinforces the conceptual link between time and space: as screen tim
 
 The visualization is shown below:
 
-![Screen Time as Day Clock](./Feb9_screen.png)![Feb 10 Screen Time](./Feb10_screen.png)![Feb 11 Screen Time](./Feb11_screen.png)
+#screen_time_clock
 
 The data reveals a substantial difference between February 9th and the following two days. On February 9th, I spent 8 hours and 44 minutes on my phone — nearly double the amount recorded on February 10th (4 hours and 57 minutes). February 11th shows a moderate increase to 5 hours and 50 minutes, though still significantly lower than the peak on the 9th.
 

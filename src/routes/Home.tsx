@@ -31,8 +31,7 @@ export default function Home() {
       <section className="card">
         <h1>Hi, I’m Yanqiu Hu</h1>
         <p className="muted">
-          This is a lightweight portfolio site. Drop Markdown files into <code>public/work</code> and they’ll
-          show up here after you run the dev server or build.
+          Welcome to my Portfolio!
         </p>
         <div className="buttonRow">
           <a className="button" href="https://github.com/hu-yq2005/" target="_blank" rel="noreferrer">
@@ -71,7 +70,7 @@ export default function Home() {
           </ul>
         )}
         {activeTab !== 'work' ? (
-          <p className="muted">Tip: bookmark <code>/?tab=work</code> to jump here.</p>
+          <p className="muted"> <code></code> </p>
         ) : null}
       </section>
     </div>

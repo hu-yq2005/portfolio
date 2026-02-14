@@ -15,9 +15,6 @@ export default function Layout() {
             <NavLink to="/?tab=work" className="nav__link">
               Work
             </NavLink>
-            <NavLink to="/view" className="nav__link">
-              View MD URL
-            </NavLink>
           </nav>
         </div>
       </header>

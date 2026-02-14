@@ -29,10 +29,6 @@ description: One-line summary.
 ---
 ```
 
-## Share a Markdown link (no copying into repo)
-
-Use the "View MD URL" page at `/view` and paste a public *raw* markdown URL (example: GitHub Raw).
-
 ## Deploy (GitHub Pages)
 
 1. Build with a base path:
