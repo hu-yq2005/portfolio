@@ -25,7 +25,7 @@ export default function Layout() {
 
       <footer className="footer">
         <div className="container footer__inner">
-          <span>© {new Date().getFullYear()} Your Name</span>
+          <span>© {new Date().getFullYear()} Yanqiu Hu</span>
           <span className="footer__sep">·</span>
           <a href="https://github.com/" target="_blank" rel="noreferrer">
             GitHub
