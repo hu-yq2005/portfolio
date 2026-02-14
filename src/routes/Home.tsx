@@ -40,7 +40,12 @@ export default function Home() {
           <a className="button" href="https://www.linkedin.com/in/huyanqiu//" target="_blank" rel="noreferrer">
             LinkedIn
           </a>
-          <a className="button button--ghost" href="/work/index.json" target="_blank" rel="noreferrer">
+          <a
+            className="button button--ghost"
+            href={`${import.meta.env.BASE_URL}work/index.json`}
+            target="_blank"
+            rel="noreferrer"
+          >
             Work index JSON
           </a>
         </div>
